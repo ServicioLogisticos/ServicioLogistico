@@ -27,20 +27,23 @@ def submit():
         email = request.form['email']
         mensaje = request.form['mensaje']
         
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        sql = "INSERT INTO registros (nombre, email, mensaje) VALUES (%s, %s, %s)"
-        values = (nombre, email, mensaje)
-        
-        cursor.execute(sql, values)
-        conn.commit()
-        
-        cursor.close()
-        conn.close()
-        
-        return render_template('success.html')
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            
+            sql = "INSERT INTO registros (nombre, email, mensaje) VALUES (%s, %s, %s)"
+            values = (nombre, email, mensaje)
+            
+            cursor.execute(sql, values)
+            conn.commit()
+            
+            cursor.close()
+            conn.close()
+            
+            return render_template('success.html')
+        except Exception as e:
+            return str(e), 500
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=port, debug=False) 
